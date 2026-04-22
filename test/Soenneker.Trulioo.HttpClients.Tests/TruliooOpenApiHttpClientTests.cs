@@ -1,20 +1,19 @@
 using Soenneker.Trulioo.HttpClients.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Trulioo.HttpClients.Tests;
 
-[Collection("Collection")]
-public sealed class TruliooOpenApiHttpClientTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public sealed class TruliooOpenApiHttpClientTests : HostedUnitTest
 {
     private readonly ITruliooOpenApiHttpClient _httpclient;
 
-    public TruliooOpenApiHttpClientTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public TruliooOpenApiHttpClientTests(Host host) : base(host)
     {
         _httpclient = Resolve<ITruliooOpenApiHttpClient>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
