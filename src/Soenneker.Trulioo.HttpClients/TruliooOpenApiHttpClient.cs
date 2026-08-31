@@ -11,13 +11,13 @@ using Soenneker.Utils.HttpClientCache.Abstract;
 
 namespace Soenneker.Trulioo.HttpClients;
 
-///<inheritdoc cref="ITruliooOpenApiHttpClient"/>
 public sealed class TruliooOpenApiHttpClient : ITruliooOpenApiHttpClient
 {
     private readonly IHttpClientCache _httpClientCache;
     private readonly IConfiguration _config;
+    private readonly string _cacheKey = $"{nameof(TruliooOpenApiHttpClient)}-{Guid.NewGuid():N}";
 
-    private const string _prodBaseUrl = "https://verification.trulioo.com";
+    private const string _prodBaseUrl = "https://verification.trulioo.com/";
 
     public TruliooOpenApiHttpClient(IHttpClientCache httpClientCache, IConfiguration config)
     {
@@ -27,7 +27,7 @@ public sealed class TruliooOpenApiHttpClient : ITruliooOpenApiHttpClient
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
     {
-        return _httpClientCache.Get(nameof(TruliooOpenApiHttpClient), (config: _config, baseUrl: _config["Trulioo:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
+        return _httpClientCache.Get(_cacheKey, (config: _config, baseUrl: _config["Trulioo:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
         {
             var apiKey = state.config.GetValueStrict<string>("Trulioo:ApiKey");
             string authHeaderName = state.config["Trulioo:AuthHeaderName"] ?? "Authorization";
@@ -50,7 +50,7 @@ public sealed class TruliooOpenApiHttpClient : ITruliooOpenApiHttpClient
     /// </summary>
     public void Dispose()
     {
-        _httpClientCache.RemoveSync(nameof(TruliooOpenApiHttpClient));
+        _httpClientCache.RemoveSync(_cacheKey);
     }
 
     /// <summary>
@@ -59,6 +59,6 @@ public sealed class TruliooOpenApiHttpClient : ITruliooOpenApiHttpClient
     /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
-        return _httpClientCache.Remove(nameof(TruliooOpenApiHttpClient));
+        return _httpClientCache.Remove(_cacheKey);
     }
 }
