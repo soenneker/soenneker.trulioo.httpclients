@@ -11,6 +11,7 @@ using Soenneker.Utils.HttpClientCache.Abstract;
 
 namespace Soenneker.Trulioo.HttpClients;
 
+/// <inheritdoc cref="ITruliooOpenApiHttpClient" />
 public sealed class TruliooOpenApiHttpClient : ITruliooOpenApiHttpClient
 {
     private readonly IHttpClientCache _httpClientCache;
