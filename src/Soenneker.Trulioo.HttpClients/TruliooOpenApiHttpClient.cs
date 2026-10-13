@@ -30,7 +30,7 @@ public sealed class TruliooOpenApiHttpClient : ITruliooOpenApiHttpClient
     {
         return _httpClientCache.Get(_cacheKey, (config: _config, baseUrl: _config["Trulioo:ClientBaseUrl"] ?? _prodBaseUrl), static state =>
         {
-            var apiKey = state.config.GetValueStrict<string>("Trulioo:ApiKey");
+            var apiKey = state.config.GetStringStrict("Trulioo:ApiKey");
             string authHeaderName = state.config["Trulioo:AuthHeaderName"] ?? "Authorization";
             string authHeaderValueTemplate = state.config["Trulioo:AuthHeaderValueTemplate"] ?? "Bearer {token}";
             string authHeaderValue = authHeaderValueTemplate.Replace("{token}", apiKey, StringComparison.Ordinal);
